@@ -17,16 +17,19 @@ def main():
     parser.add_argument(
         "-a", "--address",
         required=True,
+        help="Bluetooth address of the device",
     )
     parser.add_argument(
         "-c", "--color",
         type=parse_color,
         required=True,
+        help="Color to set the device to (ex: fa0011)"
     )
     parser.add_argument(
         "-b", "--brightness",
         type=int,
         default=0,
+        help="Warm white brightness component (0-255)"
     )
     args = parser.parse_args()
 
