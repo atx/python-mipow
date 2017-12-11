@@ -45,7 +45,7 @@ class BLECharacteristic(DbusWrapper):
         self.WriteValue(bytes(data), {})
 
     def read(self):
-        return bytes(self.read_value({}))
+        return bytes(self.ReadValue({}))
 
 
 class BLEService(DbusWrapper):

@@ -6,6 +6,8 @@ import mipow.bleee as ble
 class Mipow:
 
     UUID_LIGHT_LEVEL = "0000fffc-0000-1000-8000-00805f9b34fb"
+    UUID_PRODUCT_NAME = "0000ffff-0000-1000-8000-00805f9b34fb"
+    UUID_FIRMWARE_REVISION = "00002a26-0000-1000-8000-00805f9b34fb"
 
     def __init__(self, address, device="hci0"):
         """Create new Mipow object.
@@ -40,3 +42,21 @@ class Mipow:
         self.connect()
         char = self._device.char_by_uuid(self.UUID_LIGHT_LEVEL)
         char.write(bytes([l, r, g, b]))
+
+    def read_firmware_revision(self):
+        """Read device firmware revision.
+
+        Returns:
+            bytes: Firmware revision bytestring returned by the device
+        """
+        self.connect()
+        return self._device.char_by_uuid(self.UUID_FIRMWARE_REVISION).read()
+
+    def read_product_name(self):
+        """Read device product name string.
+
+        Returns:
+            bytes: Product name bytestring returned by the device
+        """
+        self.connect()
+        return self._device.char_by_uuid(self.UUID_PRODUCT_NAME).read()
