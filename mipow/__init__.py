@@ -1,5 +1,6 @@
 
 
+import time
 import mipow.bleee as ble
 
 
@@ -21,9 +22,16 @@ class Mipow:
         self._ble = ble.BLE()
         self._device = self._ble.device_by_address(address)
 
-    def connect(self):
+    def connect(self, timeout=None):
         """Connect to the device."""
         self._device.Connect()
+        # Meeeh
+        while timeout is None or timeout >= 0:
+            if self._device.ServicesResolved:
+                break
+            time.sleep(1)
+            if timeout is not None:
+                timeout -= 1
 
     def disconnect(self):
         """Disconnect from the device."""
