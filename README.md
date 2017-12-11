@@ -27,3 +27,13 @@ The package also contains the `mipow-ctl` command line utility.
 ```
 $ mipow-ctl -a 31:C2:4B:12:34:56 -c aaf100
 ```
+
+## MQTT Bridge
+
+```
+$ mipow-mqtt -a 31:C2:4B:19:AC:E6 -t lights/lamp
+```
+
+```
+$ mosquitto_pub -t lights/lamp/rgbl -m eeff00
+```
