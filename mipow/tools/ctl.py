@@ -5,7 +5,10 @@ import mipow
 
 
 def parse_color(s):
-    # TODO: Allow hex notation
+    if len(s) == 6:
+        return [int(ca + cb, 16) for ca, cb in zip(s[::2], s[1::2])]
+    if len(s) == 3:
+        return [int(c + c, 16) for c in s]
     return [int(c) for c in s.split(",")]
 
 
