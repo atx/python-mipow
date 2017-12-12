@@ -2,6 +2,7 @@
 
 import time
 import mipow.bleee as ble
+import string
 
 
 class Mipow:
@@ -9,6 +10,7 @@ class Mipow:
     UUID_LIGHT_LEVEL = "0000fffc-0000-1000-8000-00805f9b34fb"
     UUID_PRODUCT_NAME = "0000ffff-0000-1000-8000-00805f9b34fb"
     UUID_FIRMWARE_REVISION = "00002a26-0000-1000-8000-00805f9b34fb"
+    UUID_PIN = "0000fff7-0000-1000-8000-00805f9b34fb"
 
     def __init__(self, address, device="hci0"):
         """Create new Mipow object.
@@ -77,3 +79,21 @@ class Mipow:
         """
         self.connect()
         self._device.char_by_uuid(self.UUID_PRODUCT_NAME).write(name)
+
+    def read_pin(self):
+        """Reads the device PIN.
+
+        Returns:
+            bytes: PIN returned by the device
+        """
+        self.connect()
+        return self._device.char_by_uuid(self.UUID_PIN).read()
+
+    def write_pin(self, pin):
+        """Write the device PIN.
+
+        Args:
+            pin (bytes): 4 digit PIN
+        """
+        self.connect()
+        self._device.char_by_uuid(self.UUID_PIN).write(pin)
