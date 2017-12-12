@@ -60,11 +60,20 @@ class Mipow:
         self.connect()
         return self._device.char_by_uuid(self.UUID_FIRMWARE_REVISION).read()
 
-    def read_product_name(self):
-        """Read device product name string.
+    def read_device_name(self):
+        """Read device name string.
 
         Returns:
             bytes: Product name bytestring returned by the device
         """
         self.connect()
         return self._device.char_by_uuid(self.UUID_PRODUCT_NAME).read()
+
+    def write_device_name(self, name):
+        """Writes device name string.
+
+        Args:
+            name (bytes): Name of the device to use
+        """
+        self.connect()
+        self._device.char_by_uuid(self.UUID_PRODUCT_NAME).write(name)
