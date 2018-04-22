@@ -37,20 +37,44 @@ def main():
 
     mw = mipow.Mipow(args.address)
 
-    topic_rgbl = args.prefix + "/rgbl"
+    topic_command = args.prefix + "/command"
+    topic_rgb = args.prefix + "/rgb"
+    topic_white = args.prefix + "/white"
+    topic_available = args.prefix + "/available"
 
     def on_connect(client, userdata, flags, rc):
-        client.subscribe(topic_rgbl)
+        print("Connected")
+        for t in [topic_command, topic_rgb, topic_white]:
+            client.subscribe(t)
+        client.publish(topic_available, "online")
+
+    enabled = False
+    color = [0, 0, 0, 0]
 
     def on_message(client, userdata, msg):
-        color = parse_color(msg.payload.decode())
-        print("Setting to", color)
-        bright = color[3] if len(color) == 4 else 0
-        mw.set(color[0], color[1], color[2], l=bright)
+        nonlocal color, enabled
+        if msg.topic == topic_command:
+            if msg.payload == b"ON":
+                enabled = True
+            else:
+                enabled = False
+        elif msg.topic == topic_rgb:
+            for i, c in enumerate(map(int, msg.payload.split(b","))):
+                color[i] = c
+        elif msg.topic == topic_white:
+            color[3] = int(msg.payload)
+        else:
+            return  # Meh
+
+        if enabled:
+            mw.set(color[0], color[1], color[2], l=color[3])
+        else:
+            mw.set(0, 0, 0, l=0)
 
     client = mqtt.Client()
     client.on_connect = on_connect
     client.on_message = on_message
+    client.will_set(topic_available, "offline")
     client.connect(args.mqtt_address, args.mqtt_port, 60)
 
     client.loop_forever()
