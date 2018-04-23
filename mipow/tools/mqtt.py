@@ -46,7 +46,7 @@ def main():
         print("Connected")
         for t in [topic_command, topic_rgb, topic_white]:
             client.subscribe(t)
-        client.publish(topic_available, "online")
+        client.publish(topic_available, "online", retain=True)
 
     enabled = False
     color = [0, 0, 0, 0]
@@ -74,7 +74,7 @@ def main():
     client = mqtt.Client()
     client.on_connect = on_connect
     client.on_message = on_message
-    client.will_set(topic_available, "offline")
+    client.will_set(topic_available, "offline", retain=True)
     client.connect(args.mqtt_address, args.mqtt_port, 60)
 
     client.loop_forever()
